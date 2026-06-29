@@ -17,11 +17,45 @@ final class PosOrderSuccess extends PosOrderState {
   });
 
   PosOrderSuccess copyWith({
-    String? waiterName, List<
-        MenuItemModel>? listMenuItemModel, bool? isSubmiting
+    String? waiterName,
+    List<MenuItemModel>? listMenuItemModel,
+    bool? isSubmiting,
   }) {
-    return PosOrderSuccess(waiterName: waiterName ?? this.waiterName,
-        listMenuItemModel: listMenuItemModel ?? this.listMenuItemModel,
-        isSubmiting: isSubmiting ?? this.isSubmiting);
+    return PosOrderSuccess(
+      waiterName: waiterName ?? this.waiterName,
+      listMenuItemModel: listMenuItemModel ?? this.listMenuItemModel,
+      isSubmiting: isSubmiting ?? this.isSubmiting,
+    );
+  }
+
+  // SubTotal sebelum diskon dan pajak
+  int get subTotal {
+    return listMenuItemModel.fold(
+      0,
+      (total, item) => total + (item.quantity! * item.price!),
+    );
+  }
+
+  // Diskon 10% jika belanja di atas dari Rp 100.000
+  int get discount{
+    if(subTotal > 100000){
+      return (subTotal * 0.10).round();
+    }
+    return 0;
+  }
+
+  // Nilai setelah discount
+  int get totalAfterDiscount{
+    return subTotal + discount;
+  }
+
+  // Pajak restaurant 12%
+  int get tax{
+    return (totalAfterDiscount * 0.12).round();
+  }
+
+  // Total Pembayaran
+  int get totalPayment{
+    return totalAfterDiscount + tax;
   }
 }

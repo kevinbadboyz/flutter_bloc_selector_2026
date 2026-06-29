@@ -119,36 +119,122 @@ class PosOrderPage extends StatelessWidget {
               },
             ),
           ),
-          // Implementasi BlocSelector untuk Total Harga
+          // Implementasi BlocSelector untuk Subtotal
           BlocSelector<PosOrderBloc, PosOrderState, int>(
             selector: (state) {
               if (state is PosOrderSuccess) {
-                return state.listMenuItemModel.fold(
-                  0,
-                  (total, item) => total + (item.price! * item.quantity!),
-                );
+                return state.subTotal;
               }
               return 0;
             },
-            builder: (context, totalPrice) {
+            builder: (context, subTotalValue) {
               // Log ini di jalankan jika total kalkulasi belanjaan berubah nominalnya
               // Jika pengguna menekan tombol "Ganti Shift" atau WaiterName berubah,
               // Log ini tidak di jalankan sama sekali
-              debugPrint('Widget TOTAL HARGA REBUILD : Rp ${totalPrice}');
+              debugPrint('Widget SUBTOTAL HARGA REBUILD : Rp ${subTotalValue}');
 
               return Container(
                 width: double.infinity,
-                height: 80,
                 color: Colors.orange.shade100,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    spacing: 10,
-                    children: [
-                      Text('Total Pembayaran : ', style: Theme.of(context).textTheme.titleMedium,),
-                      Text('Rp ${totalPrice}', style: Theme.of(context).textTheme.titleMedium,)
-                    ],
+                child: ListTile(
+                  title: Text('Subtotal',
+                    style: Theme.of(context).textTheme.titleMedium,),
+                  trailing: Text(
+                    'Rp ${subTotalValue}',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+              );
+            },
+          ),
+          // Implementasi BlocSelector untuk Discount
+          BlocSelector<PosOrderBloc, PosOrderState, int>(
+            selector: (state) {
+              if (state is PosOrderSuccess) {
+                return state.discount;
+              }
+              return 0;
+            },
+            builder: (context, discountValue) {
+              if (discountValue == 0) return SizedBox.shrink();
+
+              // Log ini di jalankan jika discount kalkulasi belanjaan berubah nominalnya
+              // Jika pengguna menekan tombol "Ganti Shift" atau WaiterName berubah,
+              // Log ini tidak di jalankan sama sekali
+              debugPrint('Widget DISCOUNT REBUILD : Rp ${discountValue}');
+
+              return Container(
+                width: double.infinity,
+                color: Colors.orange.shade100,
+                child: ListTile(
+                  title: Text('Discount',
+                    style: Theme.of(context).textTheme.titleMedium,),
+                  trailing: Text(
+                    'Rp ${discountValue}',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+              );
+            },
+          ),
+
+          // Implementasi BlocSelector untuk Tax
+          BlocSelector<PosOrderBloc, PosOrderState, int>(
+            selector: (state) {
+              if (state is PosOrderSuccess) {
+                return state.tax;
+              }
+              return 0;
+            },
+            builder: (context, taxValue) {
+              if (taxValue == 0) return SizedBox.shrink();
+
+              // Log ini di jalankan jika tax kalkulasi belanjaan berubah nominalnya
+              // Jika pengguna menekan tombol "Ganti Shift" atau WaiterName berubah,
+              // Log ini tidak di jalankan sama sekali
+              debugPrint('Widget TAX REBUILD : Rp ${taxValue}');
+
+              return Container(
+                width: double.infinity,
+                color: Colors.orange.shade100,
+                child: ListTile(
+                  title: Text('Pajak (12%)',
+                    style: Theme.of(context).textTheme.titleMedium,),
+                  trailing: Text(
+                    'Rp ${taxValue}',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+              );
+            },
+          ),
+
+          // Implementasi BlocSelector untuk Total Bayar
+          BlocSelector<PosOrderBloc, PosOrderState, int>(
+            selector: (state) {
+              if (state is PosOrderSuccess) {
+                return state.totalPayment;
+              }
+              return 0;
+            },
+            builder: (context, totalPaymentValue) {
+              if (totalPaymentValue == 0) return SizedBox.shrink();
+              // Log ini di jalankan jika total bayar kalkulasi belanjaan berubah nominalnya
+              // Jika pengguna menekan tombol "Ganti Shift" atau WaiterName berubah,
+              // Log ini tidak di jalankan sama sekali
+              debugPrint(
+                'Widget TOTAL BAYAR REBUILD : Rp ${totalPaymentValue}',
+              );
+
+              return Container(
+                width: double.infinity,
+                color: Colors.orange.shade100,
+                child: ListTile(
+                  title: Text('Total Bayar',
+                    style: Theme.of(context).textTheme.titleMedium,),
+                  trailing: Text(
+                    'Rp ${totalPaymentValue}',
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
               );
